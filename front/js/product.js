@@ -1,15 +1,13 @@
 
-const reponseApi = fetch("http://localhost:3000/api/products")
+const reponseApi = fetch("http://localhost:3000/api/products");
+
+const getFurnituresId = new URLSearchParams(reponseApi);
+const ParamsFurnituresId = getFurnituresId.get("_id");
+
+const getId = fetch(`http://localhost:3000/api/products/${ParamsFurnituresId}`)
     .then(response => response.json())
     .then(result => generateFurnitures(result));
 
-function getId() {
-    const getFurnituresId = new URLSearchParams(reponseApi);
-    const ParamsFurnituresId = getFurnituresId.get("id");
-    console.log(ParamsFurnituresId);
-}
-
-// const getSpecificApi = fetch(`http://localhost:3000/api/products/${getId}`)
     
 function generateFurnitures(furnitures) {
     for (let i = 0; i < furnitures.length; i++) {
