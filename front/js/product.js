@@ -1,17 +1,29 @@
 
-const reponseApi = fetch("http://localhost:3000/api/products");
+// Get Correct Product Id
 
-const getFurnituresId = new URLSearchParams(reponseApi);
-const ParamsFurnituresId = getFurnituresId.get("_id");
+const currentUrl = window.location.href;
+const url = new URL(currentUrl);
+const id = url.searchParams.get("id");
 
-const getId = fetch(`http://localhost:3000/api/products/${ParamsFurnituresId}`)
+console.log(id);
+
+const reponseApi = fetch("http://localhost:3000/api/products/" + id)
     .then(response => response.json())
     .then(result => generateFurnitures(result));
 
+/*const reponseApi = fetch("http://localhost:3000/api/products")
+    .then(response => response.json())
+    .then(result => generateFurnitures(result));
+
+const getFurnituresId = new URLSearchParams(reponseApi);
+const ParamsFurnituresId = getFurnituresId.get("id");*/
+
+// End
+
+// Generate Correct Product
     
 function generateFurnitures(furnitures) {
-    for (let i = 0; i < furnitures.length; i++) {
-        const article = furnitures[i];
+        const article = furnitures;
 
         const imageContainer = document.querySelector(".item__img");
         const furnitureImage = document.createElement("img");
@@ -38,7 +50,6 @@ function generateFurnitures(furnitures) {
             furnitureOptions.innerHTML = colorOption;
             furnitureOptions.value = colorOption;
 
-            furnitureSelect.appendChild(colorOption);
+            furnitureSelect.appendChild(furnitureOptions);
         }
-    }
 }

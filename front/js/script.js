@@ -38,5 +38,3 @@ function generateFurnitures(furnitures) {
 }
 
 // End
-
-// Link the homepage with the page product (according to the product's id)
