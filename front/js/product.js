@@ -56,7 +56,7 @@ const productColors = document.getElementById("colors");
 
 const addToCartButton = document.getElementById("addToCart");
 
-addToCartButton.addEventListener("click", function(event) {
+addToCartButton.addEventListener("click", function (event) {
     let newItem = {
         id: productId,
         color: productColors.value,
@@ -65,15 +65,18 @@ addToCartButton.addEventListener("click", function(event) {
 
     const getItems = JSON.parse(localStorage.getItem("items")) || [];
 
-    const findSameItems = getItems.findIndex((item) => newItem.id === item.id && newItem.color === item.color);
+    const findSameItems = getItems.find((item) => (newItem.id === item.id && newItem.color === item.color));
 
-    if (findSameItems === -1) {
+    if (findSameItems) {
+        findSameItems.quantity += parseInt(newItem.quantity);
         getItems.push(newItem);
         localStorage.setItem("items", JSON.stringify(getItems));
     } else {
-        item.quantity += newItem.quantity; // error: item is not defined. 
+        newItem.quantity = parseInt(newItem.quantity);
         getItems.push(newItem);
         localStorage.setItem("items", JSON.stringify(getItems));
     }
 
 });
+
+// End
