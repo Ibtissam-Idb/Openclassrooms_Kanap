@@ -69,7 +69,6 @@ addToCartButton.addEventListener("click", function (event) {
 
     if (findSameItems) {
         findSameItems.quantity += parseInt(newItem.quantity);
-        getItems.push(newItem);
         localStorage.setItem("items", JSON.stringify(getItems));
     } else {
         newItem.quantity = parseInt(newItem.quantity);
