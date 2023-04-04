@@ -8,24 +8,28 @@
 // obtenir le localstorage
 
 const getItems = JSON.parse(localStorage.getItem("items"));
-
-// récupérer l'id du produit
+let totalQuantity = 0;
+let cartPrice = 0;
 
 // récupérer le produit dans l'API
 
-for(i = 0; i < getItems.length; i++) {
+for(let i = 0; i < getItems.length; i++) {
     let item = getItems[i];
 
+    totalQuantity += parseInt(item.quantity);
+
     let productId = item.id;
+    let productColor = item.color;
+    let productQuantity = item.quantity;
 
     let getApi = fetch("http://localhost:3000/api/products/" + productId)
     .then(response => response.json())
-    .then(result => generateCart(result));
+    .then(result => generateCart(result, productColor, productQuantity, totalQuantity));
 }
 
 // générer le produit dans la page panier
 
-function generateCart(furniture) {
+function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
     let i = furniture;
 
     const section = document.getElementById("cart__items");
@@ -34,8 +38,8 @@ function generateCart(furniture) {
 
     const article = document.createElement("article");
     article.classList.add("cart__item");
-    article.setAttribute("data-id", i.id);
-    article.setAttribute("data-color", i.color);
+    article.setAttribute("data-id", i._id);
+    article.setAttribute("data-color", itemColor);
 
     // balise <div> et <img>
 
@@ -60,7 +64,7 @@ function generateCart(furniture) {
     title.innerHTML = i.name;
 
     const color = document.createElement("p");
-    // color.innerHTML =
+    color.innerHTML = itemColor;
 
     const price = document.createElement("p");
     price.innerHTML = i.price + " €";
@@ -81,7 +85,7 @@ function generateCart(furniture) {
     inputQuantity.name = "itemQuantity";
     inputQuantity.min = 1;
     inputQuantity.max = 100;
-    // inputQuantity.value = [quantité choisie par l'utilisateur];
+    inputQuantity.value = itemQuantity;
 
     const settingsDelete = document.createElement("div");
     settingsDelete.classList.add("cart__item__content__settings__delete");
@@ -115,7 +119,19 @@ function generateCart(furniture) {
     settingsDelete.appendChild(buttonDelete);
 
     // add total quantity and total price
+
+    const cartRecap = document.querySelector(".cart__price").querySelector(".child");
+
+    const totalQuantity = document.getElementById("totalQuantity");
+    totalQuantity.innerHTML = cartQuantity;
+
+    let productPrice = itemQuantity * i.price;
+    cartPrice += productPrice;
+
+    const totalPrice = document.getElementById("totalPrice");
+    totalPrice.innerHTML = cartPrice;
+
+    cartRecap.appendChild(totalQuantity);
+    cartRecap.appendChild(totalPrice);
+
 }
-
-// calculer le prix et le nombre d'articles
-
