@@ -1,10 +1,4 @@
 
-/* choses à faire :
-** 1) obtenir le localstorage
-** 2) il manquera l'image, le nom & le prix de l'élément => récupérer tout ca via l'API
-** 3) générer les élements depuis les informations obtenues dans l'API
-*/
-
 // obtenir le localstorage
 
 const getItems = JSON.parse(localStorage.getItem("items"));
@@ -82,6 +76,7 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     const inputQuantity = document.createElement("input");
     inputQuantity.classList.add("itemQuantity");
+    inputQuantity.type = "number";
     inputQuantity.name = "itemQuantity";
     inputQuantity.min = 1;
     inputQuantity.max = 100;
@@ -130,8 +125,31 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     const totalPrice = document.getElementById("totalPrice");
     totalPrice.innerHTML = cartPrice;
+}
 
-    cartRecap.appendChild(totalQuantity);
-    cartRecap.appendChild(totalPrice);
+// gérer les modifications faites par l'utilisateur
 
+/* 1) pour supprimer : faire une boucle, modifier le localstorage, rafraichir la page
+** 2) pour modifier : faire comme dans product.js avec la methode find
+*/
+
+const buttonsDelete = document.querySelectorAll(".deleteItem");
+const buttons = Array.from(buttonsDelete);
+
+for(let button of buttons) {
+    
+    button.addEventListener("click", async function (event) {
+
+        let article = button.closest("article");
+        let dataId = article.dataset.id;
+        let dataColor = article.dataset.color; 
+
+        const findItem = getItems.findIndex((item) => (item.id === dataId && item.color === dataColor));
+
+        if(findItem !== -1) {
+            getItems.splice(findItem, 1);
+            console.log(getItems);
+            localStorage.setItem("items", JSON.stringify(getItems));
+        }
+    })
 }
