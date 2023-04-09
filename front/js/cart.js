@@ -125,31 +125,43 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     const totalPrice = document.getElementById("totalPrice");
     totalPrice.innerHTML = cartPrice;
-}
 
-// gérer les modifications faites par l'utilisateur
+    // manage modifications
 
-/* 1) pour supprimer : faire une boucle, modifier le localstorage, rafraichir la page
-** 2) pour modifier : faire comme dans product.js avec la methode find
-*/
+    deleteOrModify(article);
+};
 
-const buttonsDelete = document.querySelectorAll(".deleteItem");
-const buttons = Array.from(buttonsDelete);
+function deleteOrModify(article) {
 
-for(let button of buttons) {
-    
-    button.addEventListener("click", async function (event) {
+    const dataId = article.dataset.id;
+    const dataColor = article.dataset.color;
+    const findItem = getItems.findIndex((item) => (item.id === dataId && item.color === dataColor));
 
-        let article = button.closest("article");
-        let dataId = article.dataset.id;
-        let dataColor = article.dataset.color; 
-
-        const findItem = getItems.findIndex((item) => (item.id === dataId && item.color === dataColor));
-
+    const buttonDelete = article.querySelector(".deleteItem");
+    buttonDelete.addEventListener("click", function () {
         if(findItem !== -1) {
             getItems.splice(findItem, 1);
-            console.log(getItems);
             localStorage.setItem("items", JSON.stringify(getItems));
+            location.reload();
+        }
+    });
+
+    const inputQuantity = article.querySelector(".itemQuantity");
+    inputQuantity.addEventListener("change", function () {
+
+        const dataQuantity = inputQuantity.value;
+
+        let newItem = {
+            id: dataId,
+            color: dataColor,
+            quantity: dataQuantity,
+        };
+
+        if(findItem !== -1) {
+            getItems.splice(findItem, 1, newItem);
+            localStorage.setItem("items", JSON.stringify(getItems));
+            updateCart();
+            console.log("modified");
         }
     })
-}
+};
