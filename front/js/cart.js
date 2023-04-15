@@ -7,7 +7,7 @@ let cartPrice = 0;
 
 // récupérer le produit dans l'API
 
-for(let i = 0; i < getItems.length; i++) {
+for (let i = 0; i < getItems.length; i++) {
     let item = getItems[i];
 
     totalQuantity += parseInt(item.quantity);
@@ -17,8 +17,8 @@ for(let i = 0; i < getItems.length; i++) {
     let productQuantity = item.quantity;
 
     let getApi = fetch("http://localhost:3000/api/products/" + productId)
-    .then(response => response.json())
-    .then(result => generateCart(result, productColor, productQuantity, totalQuantity));
+        .then(response => response.json())
+        .then(result => generateCart(result, productColor, productQuantity, totalQuantity));
 }
 
 // générer le produit dans la page panier
@@ -113,7 +113,7 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     settingsDelete.appendChild(buttonDelete);
 
-    // add total quantity and total price
+    // ajouter la quantité totale et le prix total
 
     const cartRecap = document.querySelector(".cart__price").querySelector(".child");
 
@@ -126,7 +126,7 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
     const totalPrice = document.getElementById("totalPrice");
     totalPrice.innerHTML = cartPrice;
 
-    // manage modifications
+    // gérer les modifications de l'utilisateur
 
     deleteOrModify(article);
 };
@@ -139,7 +139,7 @@ function deleteOrModify(article) {
 
     const buttonDelete = article.querySelector(".deleteItem");
     buttonDelete.addEventListener("click", function () {
-        if(findItem !== -1) {
+        if (findItem !== -1) {
             getItems.splice(findItem, 1);
             localStorage.setItem("items", JSON.stringify(getItems));
             location.reload();
@@ -157,11 +157,91 @@ function deleteOrModify(article) {
             quantity: dataQuantity,
         };
 
-        if(findItem !== -1) {
+        let localHost = `http://localhost:3000/api/products/${newItem.id}`;
+        let url = new URL(localHost);
+        let itemPrice = url.searchParams.get("price");
+
+        if (findItem !== -1) {
             getItems.splice(findItem, 1, newItem);
             localStorage.setItem("items", JSON.stringify(getItems));
-            updateCart();
             console.log("modified");
         }
     })
 };
+
+
+// gérer le formulaire
+
+const form = document.querySelector(".cart__order__form");
+const submit = document.querySelector("#order");
+
+const firstName = document.querySelector("#firstName");
+const lastName = document.querySelector("#lastName");
+const address = document.querySelector("#address");
+const city = document.querySelector("#city");
+const email = document.querySelector("#email");
+
+// vérifier la validité du formulaire
+
+function verifyForm() {
+
+    const nameRegex = /^[a-zA-ZÀ-ÿ\- ]+$/;
+    const addressRegex = /^[a-zA-Z0-9À-ÿ\- ,']+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    let isFirstNameValid = nameRegex.test(firstName.value.trim());
+    let isLastNameValid = nameRegex.test(lastName.value.trim());
+    let isAddressValid = addressRegex.test(address.value.trim());
+    let isCityValid = addressRegex.test(city.value.trim());
+    let isEmailValid = emailRegex.test(email.value.trim());
+
+    const firstNameError = document.querySelector("#firstNameErrorMsg");
+    firstNameError.innerHTML = isFirstNameValid ? "" : "Le prénom n'est pas valide";
+
+    const lastNameError = document.querySelector("#lastNameErrorMsg");
+    lastNameError.innerHTML = isLastNameValid ? "" : "Le nom n'est pas valide.";
+
+    const addressError = document.querySelector("#addressErrorMsg");
+    addressError.innerHTML = isAddressValid ? "" : "L'adresse n'est pas valide.";
+
+    const cityError = document.querySelector("#cityErrorMsg");
+    cityError.innerHTML = isCityValid ? "" : "La ville n'est pas valide.";
+
+    const emailError = document.querySelector("#emailErrorMsg");
+    emailError.innerHTML = isEmailValid ? "" : "L'e-mail n'est pas valide.";
+
+    return isFirstNameValid && isLastNameValid && isAddressValid && isCityValid && isEmailValid;
+}
+
+// lancer la commande en envoyant une requête POST
+
+submit.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    if (verifyForm()) {
+
+        const request = {
+            contact: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value
+            },
+            products: getItems.map(item => item.id),
+        }
+
+        console.log(request);
+
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const orderId = data.orderId;
+                window.location.href = "../html/confirmation.html?id=" + orderId;
+            });
+    }
+})
