@@ -21,6 +21,36 @@ for (let i = 0; i < getItems.length; i++) {
         .then(result => generateCart(result, productColor, productQuantity, totalQuantity));
 }
 
+// calculer le prix total et la quantité totale du panier
+
+function updateCart() {
+    let totalQuantity = 0;
+    let cartPrice = 0;
+
+    for (let i = 0; i < getItems.length; i++) {
+
+        let item = getItems[i];
+
+        totalQuantity += parseInt(item.quantity);
+
+        let priceHref = fetch("http://localhost:3000/api/products/" + item.id)
+            .then(response => response.json())
+            .then(data => {
+                price = data.price;
+                console.log(price);
+
+                let itemPrice = item.quantity * price;
+                cartPrice += itemPrice;
+
+                let htmlQuantity = document.querySelector("#totalQuantity");
+                htmlQuantity.innerHTML = totalQuantity;
+
+                let htmlPrice = document.querySelector("#totalPrice");
+                htmlPrice.innerHTML = cartPrice;
+            });
+    }
+}
+
 // générer le produit dans la page panier
 
 function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
@@ -115,19 +145,7 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     // ajouter la quantité totale et le prix total
 
-    const cartRecap = document.querySelector(".cart__price").querySelector(".child");
-
-    const totalQuantity = document.getElementById("totalQuantity");
-    totalQuantity.innerHTML = cartQuantity;
-
-    let productPrice = itemQuantity * i.price;
-    cartPrice += productPrice;
-
-    const totalPrice = document.getElementById("totalPrice");
-    totalPrice.innerHTML = cartPrice;
-
-    // gérer les modifications de l'utilisateur
-
+    updateCart();
     deleteOrModify(article);
 };
 
@@ -157,18 +175,13 @@ function deleteOrModify(article) {
             quantity: dataQuantity,
         };
 
-        let localHost = `http://localhost:3000/api/products/${newItem.id}`;
-        let url = new URL(localHost);
-        let itemPrice = url.searchParams.get("price");
-
         if (findItem !== -1) {
             getItems.splice(findItem, 1, newItem);
             localStorage.setItem("items", JSON.stringify(getItems));
-            console.log("modified");
+            updateCart();
         }
     })
 };
-
 
 // gérer le formulaire
 
