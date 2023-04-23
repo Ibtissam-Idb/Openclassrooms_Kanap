@@ -200,7 +200,7 @@ function verifyForm() {
 
     const nameRegex = /^[a-zA-ZÀ-ÿ\- ]+$/;
     const addressRegex = /^[a-zA-Z0-9À-ÿ\- ,']+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     let isFirstNameValid = nameRegex.test(firstName.value.trim());
     let isLastNameValid = nameRegex.test(lastName.value.trim());
