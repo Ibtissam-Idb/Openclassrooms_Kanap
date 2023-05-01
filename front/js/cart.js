@@ -1,11 +1,11 @@
 
-// obtenir le localstorage
+// Get localstorage
 
 const getItems = JSON.parse(localStorage.getItem("items"));
 let totalQuantity = 0;
 let cartPrice = 0;
 
-// récupérer le produit dans l'API
+// Get the product in the API
 
 for (let i = 0; i < getItems.length; i++) {
     let item = getItems[i];
@@ -21,7 +21,7 @@ for (let i = 0; i < getItems.length; i++) {
         .then(result => generateCart(result, productColor, productQuantity, totalQuantity));
 }
 
-// calculer le prix total et la quantité totale du panier
+// calculate cart price and cart quantity
 
 function updateCart() {
     let totalQuantity = 0;
@@ -51,7 +51,7 @@ function updateCart() {
     }
 }
 
-// générer le produit dans la page panier
+// generate products in the cart page
 
 function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
     let i = furniture;
@@ -143,7 +143,7 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
 
     settingsDelete.appendChild(buttonDelete);
 
-    // ajouter la quantité totale et le prix total
+    // add total quantity and total price
 
     updateCart();
     deleteOrModify(article);
@@ -183,7 +183,7 @@ function deleteOrModify(article) {
     })
 };
 
-// gérer le formulaire
+// check form valididty
 
 const form = document.querySelector(".cart__order__form");
 const submit = document.querySelector("#order");
@@ -193,8 +193,6 @@ const lastName = document.querySelector("#lastName");
 const address = document.querySelector("#address");
 const city = document.querySelector("#city");
 const email = document.querySelector("#email");
-
-// vérifier la validité du formulaire
 
 function verifyForm() {
 
@@ -226,7 +224,7 @@ function verifyForm() {
     return isFirstNameValid && isLastNameValid && isAddressValid && isCityValid && isEmailValid;
 }
 
-// lancer la commande en envoyant une requête POST
+// POST order
 
 submit.addEventListener("click", function (event) {
     event.preventDefault();

@@ -5,9 +5,8 @@ const reponseApi = fetch("http://localhost:3000/api/products/")
     .then(response => response.json())
     .then(result => generateFurnitures(result))
 
-// End
 
-// Insert products in the homepage
+// Generate products in the homepage
 
 function generateFurnitures(furnitures) {
     for (let i = 0; i < furnitures.length; i++) {
@@ -36,5 +35,3 @@ function generateFurnitures(furnitures) {
         furnitureArticle.appendChild(furnitureDescription)
     }
 }
-
-// End

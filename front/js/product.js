@@ -9,8 +9,6 @@ const reponseApi = fetch("http://localhost:3000/api/products/" + productId)
     .then(response => response.json())
     .then(result => generateFurnitures(result));
 
-// End
-
 // Generate Correct Product
 
 function generateFurnitures(furnitures) {
@@ -47,8 +45,6 @@ function generateFurnitures(furnitures) {
     }
 }
 
-// End
-
 // Add data to Local Storage
 
 const productQuantity = document.getElementById("quantity");
@@ -77,5 +73,3 @@ addToCartButton.addEventListener("click", function (event) {
     }
 
 });
-
-// End

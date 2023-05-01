@@ -1,4 +1,4 @@
-// Obtenir l'ID de la commande
+// Get order ID
 
 const currentUrl = window.location.href;
 const url = new URL(currentUrl);
