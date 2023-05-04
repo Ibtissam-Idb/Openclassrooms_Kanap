@@ -63,19 +63,7 @@ addToCartButton.addEventListener("click", function (event) {
 
     const findSameItems = getItems.find((item) => (newItem.id === item.id && newItem.color === item.color));
 
-    if (newItem.color == "") {
-        let errorColorMessage = document.createElement("p");
-        errorColorMessage.innerHTML = "Veuillez choisir une couleur."
-        let colorDiv = document.querySelector(".item__content__settings__color")
-        colorDiv.appendChild(errorColorMessage);
-    }
-    else if (newItem.quantity < 1) {
-        let errorQuantityMessage = document.createElement("p");
-        errorQuantityMessage.innerHTML = "Veuillez choisir une quantité."
-        let quantityDiv = document.querySelector(".item__content__settings__quantity")
-        quantityDiv.appendChild(errorQuantityMessage);
-    }
-    else if (findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
+    if (findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
         findSameItems.quantity += parseInt(newItem.quantity);
         localStorage.setItem("items", JSON.stringify(getItems));
     } else if (!findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
