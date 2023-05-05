@@ -63,7 +63,10 @@ addToCartButton.addEventListener("click", function (event) {
 
     const findSameItems = getItems.find((item) => (newItem.id === item.id && newItem.color === item.color));
 
-    if (findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
+    if (newItem.color == "" || newItem.quantity < 1) {
+        alert("Veuillez choisir une couleur et une quantité.")
+    }
+    else if (findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
         findSameItems.quantity += parseInt(newItem.quantity);
         localStorage.setItem("items", JSON.stringify(getItems));
     } else if (!findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
