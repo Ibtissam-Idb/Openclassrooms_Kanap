@@ -69,10 +69,12 @@ addToCartButton.addEventListener("click", function (event) {
     else if (findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
         findSameItems.quantity += parseInt(newItem.quantity);
         localStorage.setItem("items", JSON.stringify(getItems));
+        window.location.href = "./index.html";
     } else if (!findSameItems && newItem.color !== "" && newItem.quantity >= 1) {
         newItem.quantity = parseInt(newItem.quantity);
         getItems.push(newItem);
         localStorage.setItem("items", JSON.stringify(getItems));
+        window.location.href = "./index.html";
     }
 
 });

@@ -37,7 +37,6 @@ function updateCart() {
             .then(response => response.json())
             .then(data => {
                 price = data.price;
-                console.log(price);
 
                 let itemPrice = item.quantity * price;
                 cartPrice += itemPrice;
@@ -149,11 +148,6 @@ function generateCart(furniture, itemColor, itemQuantity, cartQuantity) {
     deleteOrModify(article);
 };
 
-function updateLocalStorage() {
-    localStorage.setItem("items", JSON.stringify(items));
-    location.reload();
-}
-
 function deleteOrModify(article) {
 
     const dataId = article.dataset.id;
@@ -162,10 +156,9 @@ function deleteOrModify(article) {
 
     const buttonDelete = article.querySelector(".deleteItem");
     buttonDelete.addEventListener("click", function () {
-        if (findItem !== -1) {
-            getItems.splice(findItem, 1);
-            updateLocalStorage(getItems);
-        }
+        getItems.splice(findItem, 1);
+        localStorage.setItem("items", JSON.stringify(getItems));
+        location.reload();
     });
 
     const inputQuantity = article.querySelector(".itemQuantity");
@@ -179,88 +172,80 @@ function deleteOrModify(article) {
             quantity: dataQuantity,
         };
 
-        if (findItem !== -1 && newItem.quantity > 0) {
-            getItems.splice(findItem, 1, newItem);
-            localStorage.setItem("items", JSON.stringify(getItems));
-            updateCart();
-        }
-        else if (findItem !== -1 && newItem.quantity <= 0) {
-            getItems.splice(findItem, 1);
-            updateLocalStorage(getItems);
-        }
+        getItems.splice(findItem, 1, newItem);
+        localStorage.setItem("items", JSON.stringify(getItems));
+        updateCart();
     })
 };
 
-    // check form valididty
+// check form valididty
 
-    const form = document.querySelector(".cart__order__form");
-    const submit = document.querySelector("#order");
+const form = document.querySelector(".cart__order__form");
+const submit = document.querySelector("#order");
 
-    const firstName = document.querySelector("#firstName");
-    const lastName = document.querySelector("#lastName");
-    const address = document.querySelector("#address");
-    const city = document.querySelector("#city");
-    const email = document.querySelector("#email");
+const firstName = document.querySelector("#firstName");
+const lastName = document.querySelector("#lastName");
+const address = document.querySelector("#address");
+const city = document.querySelector("#city");
+const email = document.querySelector("#email");
 
-    function verifyForm() {
+function verifyForm() {
 
-        const nameRegex = /^[a-zA-ZÀ-ÿ\- ]+$/;
-        const addressRegex = /^[a-zA-Z0-9À-ÿ\- ,']+$/;
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const nameRegex = /^[a-zA-ZÀ-ÿ\- ]+$/;
+    const addressRegex = /^[a-zA-Z0-9À-ÿ\- ,']+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        let isFirstNameValid = nameRegex.test(firstName.value.trim());
-        let isLastNameValid = nameRegex.test(lastName.value.trim());
-        let isAddressValid = addressRegex.test(address.value.trim());
-        let isCityValid = addressRegex.test(city.value.trim());
-        let isEmailValid = emailRegex.test(email.value.trim());
+    let isFirstNameValid = nameRegex.test(firstName.value.trim());
+    let isLastNameValid = nameRegex.test(lastName.value.trim());
+    let isAddressValid = addressRegex.test(address.value.trim());
+    let isCityValid = addressRegex.test(city.value.trim());
+    let isEmailValid = emailRegex.test(email.value.trim());
 
-        const firstNameError = document.querySelector("#firstNameErrorMsg");
-        firstNameError.innerHTML = isFirstNameValid ? "" : "Le prénom n'est pas valide";
+    const firstNameError = document.querySelector("#firstNameErrorMsg");
+    firstNameError.innerHTML = isFirstNameValid ? "" : "Le prénom n'est pas valide";
 
-        const lastNameError = document.querySelector("#lastNameErrorMsg");
-        lastNameError.innerHTML = isLastNameValid ? "" : "Le nom n'est pas valide.";
+    const lastNameError = document.querySelector("#lastNameErrorMsg");
+    lastNameError.innerHTML = isLastNameValid ? "" : "Le nom n'est pas valide.";
 
-        const addressError = document.querySelector("#addressErrorMsg");
-        addressError.innerHTML = isAddressValid ? "" : "L'adresse n'est pas valide.";
+    const addressError = document.querySelector("#addressErrorMsg");
+    addressError.innerHTML = isAddressValid ? "" : "L'adresse n'est pas valide.";
 
-        const cityError = document.querySelector("#cityErrorMsg");
-        cityError.innerHTML = isCityValid ? "" : "La ville n'est pas valide.";
+    const cityError = document.querySelector("#cityErrorMsg");
+    cityError.innerHTML = isCityValid ? "" : "La ville n'est pas valide.";
 
-        const emailError = document.querySelector("#emailErrorMsg");
-        emailError.innerHTML = isEmailValid ? "" : "L'e-mail n'est pas valide.";
+    const emailError = document.querySelector("#emailErrorMsg");
+    emailError.innerHTML = isEmailValid ? "" : "L'e-mail n'est pas valide.";
 
-        return isFirstNameValid && isLastNameValid && isAddressValid && isCityValid && isEmailValid;
-    }
+    return isFirstNameValid && isLastNameValid && isAddressValid && isCityValid && isEmailValid;
+}
 
-    // POST order
+// POST order
 
-    submit.addEventListener("click", function (event) {
-        event.preventDefault();
+submit.addEventListener("click", function (event) {
+    event.preventDefault();
 
-        if (verifyForm()) {
+    if (verifyForm()) {
 
-            const request = {
-                contact: {
-                    firstName: firstName.value,
-                    lastName: lastName.value,
-                    address: address.value,
-                    city: city.value,
-                    email: email.value
-                },
-                products: getItems.map(item => item.id),
-            }
-
-            console.log(request);
-
-            fetch("http://localhost:3000/api/products/order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(request),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const orderId = data.orderId;
-                    window.location.href = "../html/confirmation.html?id=" + orderId;
-                });
+        const request = {
+            contact: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value
+            },
+            products: getItems.map(item => item.id),
         }
-    })
+
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(request),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const orderId = data.orderId;
+                window.location.href = "../html/confirmation.html?id=" + orderId;
+            });
+    }
+})
