@@ -221,10 +221,18 @@ function verifyForm() {
 
 // POST order
 
+const findNegativeQuantity = getItems.findIndex((item) => item.quantity <= 1)
+
 submit.addEventListener("click", function (event) {
     event.preventDefault();
 
-    if (verifyForm()) {
+    if(getItems.length >= 1 && findNegativeQuantity) {
+        alert("Veuillez choisir des quantités d'articles supérieures à 0.")
+    }
+    else if(getItems.length < 1) {
+        alert("Vous ne pouvez pas commander un panier vide.")
+    }
+    else if (verifyForm() && !findNegativeQuantity) {
 
         const request = {
             contact: {
