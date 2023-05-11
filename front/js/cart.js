@@ -227,7 +227,7 @@ submit.addEventListener("click", function (event) {
     event.preventDefault();
 
     if(getItems.length >= 1 && findNegativeQuantity) {
-        alert("Veuillez choisir des quantités d'articles supérieures à 0.")
+        alert("Veuillez choisir au moins 1 article par produit.")
     }
     else if(getItems.length < 1) {
         alert("Vous ne pouvez pas commander un panier vide.")
